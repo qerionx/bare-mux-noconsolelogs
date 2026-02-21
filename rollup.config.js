@@ -40,7 +40,29 @@ const configs = [
 			sourcemap: true,
 			exports: 'none',
 		},
-		plugins: commonPlugins(),
+		plugins: [
+			typescript(),
+			terser({
+				compress: {
+					drop_console: true,
+				},
+			}),
+			replace({
+				'self.BARE_MUX_VERSION': JSON.stringify(pkg.version),
+				'self.BARE_MUX_COMMITHASH': (() => {
+					try {
+						let hash = JSON.stringify(
+							execSync("git rev-parse --short HEAD", {
+								encoding: "utf-8",
+							}).replace(/\r?\n|\r/g, "")
+						);
+						return hash;
+					} catch (e) {
+						return "unknown";
+					}
+				})(),
+			}),
+		],
 	},
 	{
 		input: './src/index.ts',

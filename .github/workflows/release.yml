@@ -1,0 +1,52 @@
+name: build and relese
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: setup nodejs
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: install deps
+        run: pnpm install
+
+      - name: build
+        run: pnpm run build
+
+      - name: create tarball
+        run: |
+          npm pack
+          mv *.tgz bare-mux.tgz
+
+      - name: release create
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            bare-mux.tgz
+            dist/*
+          generate_release_notes: true
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
