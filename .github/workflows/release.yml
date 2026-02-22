@@ -52,9 +52,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           tag_name: v${{ steps.package-version.outputs.version }}
-          files: |
-            bare-mux.tgz
-            dist/*
+          files: bare-mux.tgz
           generate_release_notes: true
           draft: false
           prerelease: false
