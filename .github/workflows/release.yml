@@ -21,16 +21,11 @@ jobs:
         with:
           node-version: '20'
 
-      - name: setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8
-
       - name: install deps
-        run: pnpm install
+        run: npm install
 
       - name: build
-        run: pnpm run build
+        run: npm run build
 
       - name: get version
         id: package-version
