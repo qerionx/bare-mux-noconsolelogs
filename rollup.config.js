@@ -10,7 +10,11 @@ const pkg = JSON.parse(await readFile('package.json'));
 
 const commonPlugins = () => [
 	typescript(),
-	terser(),
+	terser({
+		compress: {
+			drop_console: true,
+		},
+	}),
 	replace({
 		'self.BARE_MUX_VERSION': JSON.stringify(
 		  pkg.version
